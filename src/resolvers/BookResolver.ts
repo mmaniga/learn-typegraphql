@@ -2,11 +2,14 @@ import {Resolver, Query, Arg, Mutation} from "type-graphql";
 import {Book} from "../models/Book";
 import {UpdateBookInput} from "../inputs/UpdateBookInput";
 import {CreateBookInput} from "../inputs/CreateBookInput";
+import {connect} from "../database/connect";
+import {getConnection} from "typeorm";
 
 @Resolver()
 export class BookResolver {
     @Query( () => [Book])
     books() {
+        console.log("Getting here...what happens to connections..")
         return Book.find();
     }
 

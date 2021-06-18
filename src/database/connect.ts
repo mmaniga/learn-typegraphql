@@ -4,6 +4,7 @@ import { Book } from '../models/book';
 
 
 export const connect = async () => {
+    console.log("Entering to create connection pool....")
     return await createConnections([
         {
             entities: [
