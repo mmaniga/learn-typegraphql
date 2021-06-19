@@ -34,17 +34,12 @@ async function main() {
     });
 
     const server = new ApolloServer({
-        context: ({ req }) => {
-            const booksdb = getConnection();
-            return { booksdb };
-            // How do i pass this booksdb to the BooksResolver if i uncomment the connect call up which uses pool
-        },
         schema:mySchema
     });
     server.listen(4000);
 
 
-   console.log("Server has started");
+  console.log("Server has started");
 }
 
 
