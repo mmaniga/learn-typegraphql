@@ -3,19 +3,31 @@
 
 import "reflect-metadata";
 
-import {createConnection} from "typeorm";
+import {createConnection, createConnections} from "typeorm";
 import {ApolloServer} from "apollo-server";
 import {BookResolver} from "./resolvers/BookResolver";
 import {buildSchema} from "type-graphql";
 import { getConnection } from 'typeorm';
 import {connect} from "./database/connect";
+import {Book} from "./models/Book";
 
 async function main() {
-    await createConnection();
-    //await connect();
-
-    //const pg = require('pg')
-    //const pgPool = new pg.Pool({ database: 'booksdb' })
+    await createConnections([
+        {
+            entities: [
+                Book,
+            ],
+            type: 'postgres',
+            host: "localhost",
+            port: 5432,
+            synchronize: false,
+            database: "booksdb",
+            logging: true,
+            extra: {
+                max: 30
+            },
+        },
+    ]);
 
     const mySchema = await buildSchema({
         resolvers : [BookResolver]
@@ -32,10 +44,8 @@ async function main() {
     server.listen(4000);
 
 
-
-   // const server2 = new ApolloServer({ schema:mySchema});
-    //await server2.listen(4000);
-    console.log("Server has started");
+   console.log("Server has started");
 }
+
 
 main();
