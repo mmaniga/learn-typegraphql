@@ -12,7 +12,8 @@ import {connect} from "./database/connect";
 import {Book} from "./models/Book";
 
 async function main() {
-    await createConnections([
+
+    await createConnection(
         {
             entities: [
                 Book,
@@ -24,18 +25,26 @@ async function main() {
             database: "booksdb",
             logging: true,
             extra: {
-                max: 30
-            },
-        },
-    ]);
+                max: 30,
+            }
+        }).then((a)=> {
+        console.log("Established connections");
+    });
+
 
     const mySchema = await buildSchema({
         resolvers : [BookResolver]
     });
 
     const server = new ApolloServer({
-        schema:mySchema
-    });
+        schema: mySchema,
+        context:  () => {
+            const db = getConnection();
+            const name = "Mani";
+            return   {db,name};
+        }
+    }
+    );
     server.listen(4000);
 
 

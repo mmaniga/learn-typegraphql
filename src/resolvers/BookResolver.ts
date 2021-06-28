@@ -1,20 +1,32 @@
-import {Resolver, Query, Arg, Mutation} from "type-graphql";
+import {Resolver, Query, Arg, Mutation, Ctx} from "type-graphql";
 import {Book} from "../models/Book";
 import {UpdateBookInput} from "../inputs/UpdateBookInput";
 import {CreateBookInput} from "../inputs/CreateBookInput";
-import {connect} from "../database/connect";
-import {getConnection} from "typeorm";
+import {Connection, getConnection, getRepository} from "typeorm";
+
+import { createConnection } from 'typeorm';
+import {ContextParamMetadata} from "type-graphql/dist/metadata/definitions";
 
 @Resolver()
 export class BookResolver {
     @Query( () => [Book])
-    books() {
+    async books(@Ctx("db") db: Connection,
+                @Ctx("name") name: String) {
         console.log("Getting here...what happens to connections..")
-        return Book.find();
+        console.log(`Connection Name ${Book.getRepository().manager.connection.name}`);
+        console.log(name);
+       //console.log(db.toString());
+        return db.getRepository(Book).find();
+        //return Book.find();
+        //return getRepository(Book).find();
+        //const conn = await getConnection();
+        //return conn.getRepository(Book).find();
+        // b.find();
+        //console.log(`Connection Name ${Book.getRepository().manager.connection.name}`);
     }
 
     @Query( () => Book)
-    book(@Arg("id") id:string) {
+    book( @Arg("id") id:string) {
         return Book.findOne({where:{id}})
     }
 

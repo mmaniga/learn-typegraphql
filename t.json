@@ -1,0 +1,1 @@
+{"query":"query{getMedicineOrdersOMSList(patientId: \"7cd7b5b7-5907-4add-bff8-36fbf7718dc9\")  { medicineOrdersList{patientId,orderAutoId}  }}"}
